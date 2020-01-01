@@ -1,0 +1,57 @@
+class Patsy(cmd.Cmd):
+
+    def do_listen(self, line):
+        r = sr.Recognizer()
+        mic = sr.Microphone()
+        with mic as source:
+            audio = r.listen(source)
+            heard = r.recognize_google(audio)
+        print(heard)
+
+    def do_speak(self, line):
+        listen_cmd = "gtts-cli '"  + line + "' --output patsy.mp3"
+        listen = os.popen(listen_cmd)
+        listen.close()
+        speak_cmd = "afplay patsy.mp3"
+        speak = os.popen(speak_cmd)
+        print(line)
+        self.last_output = speak
+        os.system("clear")
+        sys.stdout.write(YELLOW)
+        speak.close()
+
+    async def do_sing(self, line):
+        past = "Sang"
+        song = "Crazy.mp3"
+        sys.stdout.write(PURPLE)
+        self.prompt = past
+        sing_cmd = "afplay " + song
+        sing = os.popen(sing_cmd)
+        print(line)
+        self.last_output = sing
+        os.system("clear")
+        sing.close()
+    
+    def do_shell(self, line):
+        "Run a shell command"
+        print("running shell command:", line)
+        output = os.popen(line).read()
+        print(output)
+        self.last_output = output
+
+    def do_eq(self, line):
+        eq()
+
+    def do_list(dir_list, path):  
+        path = '.'
+        files = os.listdir(path)
+        for name in files:
+            print(name)
+    
+    def do_reload(self):
+        #test
+        line = "patsy.py 5 5 -v"
+        print("running shell command:")
+        output = os.popen(line).read()
+        print(output)
+        self.last_output = output
